@@ -10,7 +10,11 @@ import ankuranurag.diagnal.R
 @BindingAdapter("setPoster")
 fun setPoster(view: ImageView, posterName: String) {
     val context = view.context
-    val resId = context.resources.getIdentifier(posterName, "drawable", context.packageName)
+
+    //Json has name as "poster1.jpg", but we only need "poster1" here.
+    val resName=posterName.split(".").first()
+
+    val resId = context.resources.getIdentifier(resName, "drawable", context.packageName)
     if (resId != 0)
         view.setImageResource(resId)
     else

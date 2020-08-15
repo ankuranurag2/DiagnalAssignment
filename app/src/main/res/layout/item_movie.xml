@@ -12,8 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/movie_iv"
@@ -25,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:setPoster="@{movieData.posterImage}"
             tools:ignore="ContentDescription"
-            tools:src="@drawable/poster1" />
+            tools:src="@drawable/placeholder_for_missing_posters" />
 
         <TextView
             style="@style/textview_style"

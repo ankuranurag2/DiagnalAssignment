@@ -37,6 +37,7 @@ dependencies {
     def recycler_version="1.1.0"
     def gson_version="2.8.6"
     def lifecycle_version = '2.2.0'
+    def koin_version = '2.1.6'
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -47,11 +48,21 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    //FireBase
     implementation "com.google.firebase:firebase-analytics:$analytics_version"
     implementation "com.google.firebase:firebase-crashlytics:$crashlytics_version"
 
+    //RecyclerView
     implementation "androidx.recyclerview:recyclerview:$recycler_version"
+
+    //GSON
     implementation "com.google.code.gson:gson:$gson_version"
 
+    //ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
+    //KOIN
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-androidx-scope:$koin_version"
+    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
 }

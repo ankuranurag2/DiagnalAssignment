@@ -1,9 +1,9 @@
 package ankuranurag.diagnal.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import ankuranurag.diagnal.App
 import ankuranurag.diagnal.R
 import ankuranurag.diagnal.model.MovieData
 import ankuranurag.diagnal.repository.MovieRepository
@@ -14,10 +14,10 @@ import kotlinx.coroutines.launch
  * I am using {@link AndroidViewModel} instead of regular one,
  * as context was needed for reading the files from Assets.
  */
-class MainViewModel(private val app: App, private val repository: MovieRepository) : AndroidViewModel(app) {
+class MainViewModel(private val app: Application, private val repository: MovieRepository) : AndroidViewModel(app) {
 
     private var pageNum = 1
-    private val _movieList = ArrayList<MovieData>()
+    private val _movieListStore = ArrayList<MovieData>()
 
     //Variables that are being exposed for observation
     var title = MutableLiveData<String>()
@@ -37,11 +37,12 @@ class MainViewModel(private val app: App, private val repository: MovieRepositor
                 title.postValue(it.title ?: app.getString(R.string.app_name))
                 val list = it.movieContent?.movieList
                 if (false == list?.isNullOrEmpty()) {
-                    _movieList.addAll(list)
-                    movieList.postValue(_movieList)
+                    _movieListStore.addAll(list)
                     pageNum++
                 } else
                     pageNum = -1                    //-1 indicates that no more pages are left for lazy loading
+
+                movieList.postValue(_movieListStore)
             }
         }
     }
