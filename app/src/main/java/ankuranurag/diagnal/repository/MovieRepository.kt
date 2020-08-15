@@ -13,13 +13,17 @@ import kotlinx.coroutines.withContext
 class MovieRepository {
 
     suspend fun getMovieResponse(context: Context, pageNum: Int = 1): MovieResponse? {
-        val jsonString = withContext(Dispatchers.IO) {
-            context.assets.open("page${pageNum}.json").bufferedReader().use { it.readText() }
-        }
+        try{
+            val jsonString = withContext(Dispatchers.IO) {
+                context.assets.open("page${pageNum}.json").bufferedReader().use { it.readText() }
+            }
 
-        if (jsonString.isBlank())
+            if (jsonString.isBlank())
+                return null
+            val typeToken = object : TypeToken<MovieResponse>() {}.type
+            return Gson().fromJson(jsonString, typeToken)
+        }catch (e:Exception){
             return null
-        val typeToken = object : TypeToken<MovieResponse>() {}.type
-        return Gson().fromJson(jsonString, typeToken)
+        }
     }
 }

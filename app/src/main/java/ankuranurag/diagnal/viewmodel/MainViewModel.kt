@@ -33,16 +33,19 @@ class MainViewModel(private val app: Application, private val repository: MovieR
             return
         viewModelScope.launch {
             val response = repository.getMovieResponse(app, pageNum)
-            response?.page?.let {
-                title.postValue(it.title ?: app.getString(R.string.app_name))
-                val list = it.movieContent?.movieList
-                if (false == list?.isNullOrEmpty()) {
-                    _movieListStore.addAll(list)
-                    pageNum++
-                } else
-                    pageNum = -1                    //-1 indicates that no more pages are left for lazy loading
+            if (response == null)
+                pageNum = -1                    //-1 indicates that no more pages are left for lazy loading
+            else {
+                response.page?.let {
+                    title.postValue(it.title ?: app.getString(R.string.app_name))
+                    val list = it.movieContent?.movieList
+                    if (false == list?.isNullOrEmpty()) {
+                        _movieListStore.addAll(list)
+                        pageNum++
+                    }
 
-                movieList.postValue(_movieListStore)
+                    movieList.postValue(_movieListStore)
+                }
             }
         }
     }

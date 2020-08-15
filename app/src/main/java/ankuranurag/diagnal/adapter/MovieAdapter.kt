@@ -7,17 +7,20 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ankuranurag.diagnal.databinding.ItemMovieBinding
 import ankuranurag.diagnal.model.MovieData
+import ankuranurag.diagnal.utils.RecyclerEventListener
 
 /**
  * created by ankur on 15/8/20
  */
-class MovieAdapter : ListAdapter<MovieData, MovieAdapter.MovieViewHolder>(MovieDiffCallback()) {
+class MovieAdapter(private val eventListener: RecyclerEventListener) : ListAdapter<MovieData, MovieAdapter.MovieViewHolder>(MovieDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         return MovieViewHolder(ItemMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        if (position==itemCount-1)
+            eventListener.onBottomReached()
         holder.bindData(getItem(position))
     }
 

@@ -12,10 +12,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import ankuranurag.diagnal.R
 import ankuranurag.diagnal.adapter.MovieAdapter
 import ankuranurag.diagnal.databinding.ActivityMainBinding
+import ankuranurag.diagnal.utils.RecyclerEventListener
 import ankuranurag.diagnal.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),RecyclerEventListener {
 
     private lateinit var activityBinding: ActivityMainBinding
 
@@ -61,8 +62,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBottomReached() {
+        viewModel.fetchMovieList()
+    }
+
     private fun observeData() {
-        val adapter = MovieAdapter()
+        val adapter = MovieAdapter(this)
         activityBinding.moviesRv.let {
             it.adapter = adapter
             it.layoutManager = layoutManager
@@ -74,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                     if (it.size > 0) {
                         moviesRv.visibility = View.VISIBLE
                         errorTv.visibility = View.GONE
-                        adapter.submitList(it)
+                        adapter.submitList(it.toMutableList())
                     } else {
                         moviesRv.visibility = View.GONE
                         errorTv.visibility = View.VISIBLE
