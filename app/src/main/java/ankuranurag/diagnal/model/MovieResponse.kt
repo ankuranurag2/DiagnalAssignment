@@ -21,12 +21,12 @@ data class Page(
     @SerializedName("page-size")
     val pageSize: String?,
     @SerializedName("content-items")
-    val movieList: MovieList?
+    val movieContent: MovieContent?
 )
 
-data class MovieList(
+data class MovieContent(
     @SerializedName("content")
-    val content: List<MovieData>?
+    val movieList: List<MovieData>?
 )
 
 data class MovieData(
