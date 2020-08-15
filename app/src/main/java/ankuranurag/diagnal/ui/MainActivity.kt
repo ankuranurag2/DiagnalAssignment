@@ -1,5 +1,6 @@
 package ankuranurag.diagnal.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import ankuranurag.diagnal.R
 import ankuranurag.diagnal.adapter.MovieAdapter
 import ankuranurag.diagnal.databinding.ActivityMainBinding
@@ -18,6 +20,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var activityBinding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModel()
+
+    private val layoutManager by lazy {
+        GridLayoutManager(this@MainActivity, 3)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +53,20 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        when (newConfig.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> layoutManager.spanCount = 3
+            Configuration.ORIENTATION_LANDSCAPE -> layoutManager.spanCount = 7
+        }
+    }
 
     private fun observeData() {
         val adapter = MovieAdapter()
-        activityBinding.moviesRv.adapter = adapter
+        activityBinding.moviesRv.let {
+            it.adapter = adapter
+            it.layoutManager = layoutManager
+        }
 
         viewModel.movieList.observe(this, Observer {
             it?.let {
@@ -66,6 +82,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+        viewModel.title.observe(this, Observer {
+            supportActionBar?.title=it
+        })
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
     }
 
     private fun handleSearch(query: String) {
