@@ -79,6 +79,9 @@ class MainActivity : AppCompatActivity(),RecyclerEventListener {
                     if (it.size > 0) {
                         moviesRv.visibility = View.VISIBLE
                         errorTv.visibility = View.GONE
+
+                        //ListAdapter doesn't update itself if same list object is passed again
+                        //https://stackoverflow.com/questions/49726385/listadapter-not-updating-item-in-recyclerview
                         adapter.submitList(it.toMutableList())
                     } else {
                         moviesRv.visibility = View.GONE
