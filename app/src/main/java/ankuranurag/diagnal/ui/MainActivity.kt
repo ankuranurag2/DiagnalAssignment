@@ -14,9 +14,10 @@ import ankuranurag.diagnal.adapter.MovieAdapter
 import ankuranurag.diagnal.databinding.ActivityMainBinding
 import ankuranurag.diagnal.utils.RecyclerEventListener
 import ankuranurag.diagnal.viewmodel.MainViewModel
+import ankuranurag.diagnal.views.GridSpacingItemDecoration
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity(),RecyclerEventListener {
+class MainActivity : AppCompatActivity(), RecyclerEventListener {
 
     private lateinit var activityBinding: ActivityMainBinding
 
@@ -24,6 +25,14 @@ class MainActivity : AppCompatActivity(),RecyclerEventListener {
 
     private val layoutManager by lazy {
         GridLayoutManager(this@MainActivity, 3)
+    }
+
+    private val portraitDecorator by lazy {
+        GridSpacingItemDecoration(3, resources.getDimensionPixelSize(R.dimen.dimen_10dp), true)
+    }
+
+    private val landScapeDecorator by lazy {
+        GridSpacingItemDecoration(7, resources.getDimensionPixelSize(R.dimen.dimen_10dp), true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +66,20 @@ class MainActivity : AppCompatActivity(),RecyclerEventListener {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         when (newConfig.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> layoutManager.spanCount = 3
-            Configuration.ORIENTATION_LANDSCAPE -> layoutManager.spanCount = 7
+            Configuration.ORIENTATION_PORTRAIT -> {
+                layoutManager.spanCount = 3
+                with(activityBinding.moviesRv) {
+                    removeItemDecoration(landScapeDecorator)
+                    addItemDecoration(portraitDecorator)
+                }
+            }
+            Configuration.ORIENTATION_LANDSCAPE -> {
+                layoutManager.spanCount = 7
+                with(activityBinding.moviesRv) {
+                    removeItemDecoration(portraitDecorator)
+                    addItemDecoration(landScapeDecorator)
+                }
+            }
         }
     }
 
@@ -71,6 +92,7 @@ class MainActivity : AppCompatActivity(),RecyclerEventListener {
         activityBinding.moviesRv.let {
             it.adapter = adapter
             it.layoutManager = layoutManager
+            it.addItemDecoration(portraitDecorator)
         }
 
         viewModel.movieList.observe(this, Observer {
@@ -92,7 +114,7 @@ class MainActivity : AppCompatActivity(),RecyclerEventListener {
         })
 
         viewModel.title.observe(this, Observer {
-            supportActionBar?.title=it
+            supportActionBar?.title = it
         })
         supportActionBar?.setHomeAsUpIndicator(R.drawable.back)
     }
