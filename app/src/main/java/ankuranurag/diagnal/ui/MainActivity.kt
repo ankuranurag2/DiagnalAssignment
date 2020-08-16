@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import ankuranurag.diagnal.R
 import ankuranurag.diagnal.adapter.MovieAdapter
 import ankuranurag.diagnal.databinding.ActivityMainBinding
+import ankuranurag.diagnal.utils.DebouncingQueryTextListener
 import ankuranurag.diagnal.utils.RecyclerEventListener
 import ankuranurag.diagnal.viewmodel.MainViewModel
 import ankuranurag.diagnal.views.GridSpacingItemDecoration
@@ -47,19 +48,17 @@ class MainActivity : AppCompatActivity(), RecyclerEventListener {
 
         val search = menu?.findItem(R.id.toolbar_search)
         val searchView = (search?.actionView as? SearchView)
-        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
+        searchView?.setOnQueryTextListener(
+            DebouncingQueryTextListener(this.lifecycle, { query ->
+                val length = query?.length ?: 0
+                if (length == 0)
+                    viewModel.resetSearch()
+                else if (length >= 3)
+                    viewModel.searchMovies(query!!)
+            }, {
                 searchView.clearFocus()
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if ((newText?.length ?: 0) > 3)
-                    handleSearch(newText!!)
-                return true
-            }
-        })
-
+            })
+        )
         return true
     }
 

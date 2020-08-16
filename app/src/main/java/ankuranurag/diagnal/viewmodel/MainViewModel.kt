@@ -21,7 +21,7 @@ class MainViewModel(private val app: Application, private val repository: MovieR
 
     //Variables that are being exposed for observation
     var title = MutableLiveData<String>()
-    val movieList = MutableLiveData<ArrayList<MovieData>>()
+    val movieList = MutableLiveData<List<MovieData>>()
 
     //Load initial data
     init {
@@ -48,5 +48,12 @@ class MainViewModel(private val app: Application, private val repository: MovieR
                 }
             }
         }
+    }
+
+    fun resetSearch() = movieList.postValue(_movieListStore)
+
+    fun searchMovies(query: String) = viewModelScope.launch {
+        val filterList = repository.filterMovieList(query, _movieListStore)
+        movieList.postValue(filterList)
     }
 }
