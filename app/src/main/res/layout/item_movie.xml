@@ -27,6 +27,7 @@
             tools:src="@drawable/placeholder_for_missing_posters" />
 
         <TextView
+            android:id="@+id/title_tv"
             style="@style/textview_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

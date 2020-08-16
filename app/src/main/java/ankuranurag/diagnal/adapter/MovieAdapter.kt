@@ -27,6 +27,7 @@ class MovieAdapter(private val eventListener: RecyclerEventListener) : ListAdapt
     inner class MovieViewHolder(private val itemBinding: ItemMovieBinding) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bindData(data: MovieData) {
             itemBinding.apply {
+                titleTv.isSelected=true                 //to enable marquee
                 movieData = data
                 executePendingBindings()
             }
